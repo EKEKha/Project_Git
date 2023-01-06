@@ -36,4 +36,18 @@ public class RevInsertProService {
 		
 	}
 
+	public int insertBoardno() {
+		int board_no=0;
+		
+		Connection con = getConnection();
+		ReviewDAO reviewDAO = ReviewDAO.getInstance();
+		reviewDAO.setConnection(con);
+		
+		board_no = reviewDAO.selectInsertboard();
+		close(con);
+		
+		
+		return board_no;
+	}
+
 }

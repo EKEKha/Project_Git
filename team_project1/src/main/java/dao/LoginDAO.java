@@ -3,7 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import vo.Member;
+import vo.MemberBean;
+
 import static db.JdbcUtil.*;
 
 public class LoginDAO {
@@ -26,18 +27,18 @@ public class LoginDAO {
 		this.con = con;
 	}
 	
-	public Member selectLoginMember(String id, String passwd) {
+	public MemberBean selectLoginMember(String mem_id, String mem_pwd) {
 		// TODO Auto-generated method stub
-		Member loginMember = null;
+		MemberBean loginMember = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = con.prepareStatement("SELECT * FROM member WHERE mem_id = ? AND mem_pwd = ?");
-			pstmt.setString(1, id);
-			pstmt.setString(2, passwd);
+			pstmt.setString(1, mem_id);
+			pstmt.setString(2, mem_pwd);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
-				loginMember = new Member();
+				loginMember = new MemberBean();
 				loginMember.setMem_id(rs.getString("mem_id"));
 				loginMember.setMem_pwd(rs.getString("mem_pwd"));
 				loginMember.setMem_name(rs.getString("mem_name"));
@@ -48,6 +49,7 @@ public class LoginDAO {
 				loginMember.setMem_address2(rs.getString("mem_address2"));
 				loginMember.setMem_address2(rs.getString("mem_address3"));
 				loginMember.setMem_grade(rs.getString("mem_grade"));
+				loginMember.setMem_point(rs.getInt("mem_point"));
 				
 				
 			}
@@ -66,6 +68,14 @@ public class LoginDAO {
 		}
 		return loginMember;
 	}
+	
+
+	
+	
+	
+	
+	
+	
 	
 }
 

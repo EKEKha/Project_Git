@@ -19,7 +19,8 @@ public class RevListAction implements Action {
 		ArrayList<ReviewBean> listReview = new ArrayList<ReviewBean>();
 		
 		int page=1;//출력될 페이지의 기본값1로 설정
-		int limit=8;//한페이지당 출력될 글의 갯수 
+		
+		int limit=9;//한페이지당 출력될 글의 갯수 
 		
 
 		if(request.getParameter("page")!=null){
@@ -31,6 +32,7 @@ public class RevListAction implements Action {
 		int listCount=reviewListService.getListCount();//총 글의 개수를 반환하는 메서드 호출
 		
 		listReview = reviewListService.getListReview(page,limit);//지정한페에지에 출력될 글목록을 반환하는 메서드 호출
+		
 		
 		
 		int maxPage=(int)((double)listCount/limit+0.95); //총 페이지 수 계산 =>총글의갯수/출력될글의 갯수에 0.95를 하면 정수올림할수있음
@@ -55,7 +57,7 @@ public class RevListAction implements Action {
 		request.setAttribute("listReview", listReview);
 		
 
-		ActionForward forward = new ActionForward("review_board_view.jsp", false);
+		ActionForward forward = new ActionForward("/review/review_board_view.jsp", false);
 		return forward;
 	}
 

@@ -11,8 +11,12 @@ public class MemberDeleteService {
 		Connection con = getConnection();
 		MemberDAO memberDAO = MemberDAO.getInstance();
 		memberDAO.setConnection(con);
-		int deleteCount=memberDAO.deleteMeber(deleteId);
-		if(deleteCount>0) {
+		
+	     int deleteCount=memberDAO.deleteMeber(deleteId);
+	     int deleteOrderD=memberDAO.deleteOrderDetail(deleteId); 
+		 int deleteOrderI=memberDAO.deleteOrderItem(deleteId); 
+		
+		if( deleteCount>0 ) {
 			commit(con);
 			deleteResult=true;
 		}
@@ -22,5 +26,4 @@ public class MemberDeleteService {
 		close(con);
 		return false;
 	}
-
 }

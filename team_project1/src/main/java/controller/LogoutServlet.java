@@ -31,7 +31,8 @@ public class LogoutServlet extends HttpServlet {
 		//id 정보를 저장하고 있는 session 을 삭제 후 index.jsp 로 리다이렉트
 		HttpSession session = request.getSession();
 		session.invalidate();
-		response.sendRedirect("main.jsp");
+		//session.removeAttribute("mem_id");
+		response.sendRedirect("index.jsp");
 	}
 
 }

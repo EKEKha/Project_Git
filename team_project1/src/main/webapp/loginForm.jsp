@@ -4,44 +4,51 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인 페이지</title>
+<title>로그인</title>
+
+
+<link rel="stylesheet" type="text/css" href="css/loginform.css">
+
+
+
 </head>
 <body>
 	<%@include file="userHeader.jsp"%>
-	<section id="loginFormArea">
-		<div style="padding : 100px; font-family: mv Boli;">
-			<div style="border: 1px solid gold; padding-top: 50px; padding-bottom: 50px;">
-				<form action="login" method="POST">
-
-					<b style="font-size: 40px; color: gold;">LOGIN</b>
-
-					<div class="td_right" style="padding-top: 10px;">
-						<input type="text" placeholder="아이디" name="mem_id" id="id"
-							style="width: 250px; height: 35px; font-size: 20px; padding:5px"
-							maxlength=20; />
-					</div>
-
-					<div class="td_right" style="padding-top: 5px;">
-						<input type="password" placeholder="비밀번호" name="mem_pwd" id="passwd"
-							style="width: 250px; height: 35px; font-size: 20px; padding:5px"
-							maxlength="20" />
-					</div>
-
-					<div style="padding-top: 10px;">
-						<input type="submit" value="로그인" id="selectButton"
-							style="width: 100px; height: 35px; font-size: 20px;" />
-					</div>
-					
-					<div style="padding-top: 5px;">	
-						<input type="button" value="아이디/비밀번호 찾기" id=""
-							style="width: 185px; height: 35px; font-size: 20px;" />
-					</div>
 
 
-				</form>
-			</div>
+
+<div class="colorlib-partner">
+	<div class="container">
+		<div class="row">
+
+
+
+
+			<div class="login-wrapper">
+					<h2>Login</h2>
+					<form method="post" action="login" id="login-form">
+						<input type="text" name="mem_id" placeholder="Id"> <input
+							type="password" name="mem_pwd" placeholder="Password"> <input
+							type="submit" value="Login"> <label for="remember-check">
+							<a href="memberIdFindForm.me"> 아이디 찾기 /</a>
+						</label> <label for="remember-check"> <a
+							href="memberPwFind.jsp"> 비밀번호 찾기 </a>
+						</label>
+					</form>
+				</div>
+
+
+
 		</div>
-	</section>
+	</div>
+</div>
+
+
+
+
+
+	
+	
 	<%@include file="footer.jsp"%>
 </body>
 </html>

@@ -1,12 +1,17 @@
 package action.review;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import action.Action;
+import svc.product.OrderItemNameService;
 import vo.ActionForward;
 
 public class WriteAction implements Action {
@@ -30,7 +35,18 @@ public class WriteAction implements Action {
 			
 			out.println("</script>");
 		}else {
-			forward = new ActionForward("review_board_form.jsp", true); //세션이기 때문에 
+			
+			OrderItemNameService orderItemNameService=new OrderItemNameService();
+			
+			Map<Integer,String>  orderList=new LinkedHashMap<Integer,String>();
+			orderList=orderItemNameService.getOrderList(mem_id);
+			
+			request.setAttribute("orderList", orderList);
+			
+			
+			
+			
+			forward = new ActionForward("/review/review_board_form.jsp", false); //세션이기 때문에 
 		}
 		return forward;
 	}

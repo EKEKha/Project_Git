@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.JAI;
@@ -32,6 +33,7 @@ public class RevInsertProAction implements Action {
 		ActionForward forward=null;
 		ReviewBean reviewBean=null;
 
+		/***세션정보로 한번더 확인작업 이유?바로 뷰 페이지로 접속시 로그인하지 않아도 글 등록이되버림****/
 
 		HttpSession session = request.getSession();
 		String mem_id = (String)session.getAttribute("mem_id");
@@ -42,7 +44,7 @@ public class RevInsertProAction implements Action {
 			out.println("<script>");
 			out.println("alert('잘못된 접근입니다.');");
 			
-			out.println("location.href='main.jsp';");//상대경로로 (java코드이므로 EL이나 JSTL 사용못함)
+			out.println("location.href='index.jsp';");//상대경로로 (java코드이므로 EL이나 JSTL 사용못함)
 			//out.println("location.href='./userLogin.usr';");
 			
 			out.println("</script>");
@@ -68,30 +70,27 @@ public class RevInsertProAction implements Action {
 		 */
 		ServletContext context = request.getServletContext();
 		realFolder=context.getRealPath(saveFolder);   
-		String fileName=null;
-		String origfileName=null;
-		try {
+		
+
+		 File file2 = new File(realFolder); if(!file2.exists()) { file2.mkdirs(); }
+		
 		MultipartRequest multi=new MultipartRequest(request,
 				realFolder,
 				fileSize,
 				"UTF-8",
 				new DefaultFileRenamePolicy());
 		
-		/*
-		 * MultipartRequest multi2=new MultipartRequest(request, realFolder, fileSize2,
-		 * "UTF-8", new DefaultFileRenamePolicy());
-		 */
-
-	    /*업로드 할때 당시의 파일이름.(원래파일이름)
-	    String oriFilename = multi.getOriginalFileName("file1");
-	    String filename = multi.getFilesystemName("file1");
-	    */
+	
+		Enumeration<?> files = multi.getFileNames();
+		String file=(String)multi.getFileNames().nextElement();
 		
-		String file=(String)multi.getFileNames().nextElement();//file타입 input태그의 name속성값들을 하나씩 가져옴
 		
-		fileName=multi.getFilesystemName(file); //서버에저장된이름 동일한이름등록시 ㄷ뒤에숫자..
-		origfileName=multi.getOriginalFileName(file);
+		
+		String fileName=multi.getFilesystemName(file); //서버에저장된이름 동일한이름등록시 ㄷ뒤에숫자..
+		String origfileName=multi.getOriginalFileName(file);
 		  
+		/*
+		if(fileName!=null) {
 		  ParameterBlock pb = new ParameterBlock(); //★★ 운영체제 : 윈도우 / \ , 리눅스나 맥 /
 		  pb.add(realFolder + File.separator + fileName);//pb.add(imagePath+"/"+fileName);
 		  
@@ -109,23 +108,27 @@ public class RevInsertProAction implements Action {
 		  //출력할 위치와 파일이름을 설정하고 썸네일 이미지를 생성 
 			File thumbnailfile = new File(realFolder + File.separator + "sm_" + fileName);//저장하는 타입을 jpg로 설정.
 		  ImageIO.write(thumb,"jpg",thumbnailfile);
-		
-	
+		}
+	*/
+		 
 		
 		//폼형식에서 받아올수있는 값들, 세션에저장된 id, 별점, 내용, 파일,
 		reviewBean=new ReviewBean();
 		reviewBean.setMem_id(mem_id);
 		reviewBean.setRev_content(multi.getParameter("rev_content"));
 		reviewBean.setRev_score(multi.getParameter("rev_score"));
+		reviewBean.setProd_id(Integer.parseInt(multi.getParameter("prod_id")));
 		reviewBean.setRev_fileName(fileName);
 		reviewBean.setRev_origfileName(origfileName);
 		
-		}catch(Exception e) {
-			System.out.println("파일 업로드 문제 발생 : "+e+fileName); };
+
 		
 		RevInsertProService revInsertProService=new RevInsertProService();
 		boolean isWriteSuccess = revInsertProService.registReview(reviewBean);
 			
+		int board_no=revInsertProService.insertBoardno();
+		
+		
 			if(!isWriteSuccess){
 				response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -135,7 +138,7 @@ public class RevInsertProAction implements Action {
 				out.println("</script>");
 			}
 			else{
-				forward = new ActionForward("rev_boardList.do", false);
+				forward = new ActionForward("revDetailView.do?board_no="+board_no, false);
 			}
 
 		}

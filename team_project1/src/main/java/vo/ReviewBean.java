@@ -2,7 +2,7 @@ package vo;
 
 public class ReviewBean {
 	private int board_no;
-	private String prod_num;
+	private int prod_id;
 	private String mem_id;
 	private String rev_content;
 	private String rev_score;
@@ -18,12 +18,19 @@ public class ReviewBean {
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
 	}
-	public String getProd_num() {
-		return prod_num;
+	
+	
+	
+	
+	
+	public int getProd_id() {
+		return prod_id;
 	}
-	public void setProd_num(String prod_num) {
-		this.prod_num = prod_num;
+
+	public void setProd_id(int prod_id) {
+		this.prod_id = prod_id;
 	}
+
 	public String getMem_id() {
 		return mem_id;
 	}

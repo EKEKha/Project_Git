@@ -68,7 +68,7 @@ public class ReviewDAO {
 		ArrayList<ReviewBean>  listReview=new ArrayList<ReviewBean>();
 		//try catch 문에 안들어가있음..
 	 	String sql="select * from review order by board_no desc limit ?,8"; //1행부터 시작하고싶으면 0,6   3행부터싲가하고싶으면 4,6
-	 			int startrow=(page-1)*8; //읽기시작할 row번호//mysql은 0부터 시작이라 page-1할 필요없음
+	 			int startrow=(page-1)*9; //읽기시작할 row번호//mysql은 0부터 시작이라 page-1할 필요없음
 	
 	 			
 	 	try {
@@ -81,7 +81,7 @@ public class ReviewDAO {
 				ReviewBean reviewBean=new ReviewBean();
 				
 				reviewBean.setBoard_no(rs.getInt("board_no"));
-				reviewBean.setProd_num(rs.getString("prod_num"));
+				reviewBean.setProd_id(rs.getInt("prod_id"));
 				reviewBean.setMem_id(rs.getString("mem_id"));
 				reviewBean.setRev_content(rs.getString("rev_content"));
 				reviewBean.setRev_score(rs.getString("rev_score"));
@@ -108,22 +108,23 @@ public class ReviewDAO {
 	public  int insertReview(ReviewBean reviewBean) {
 		String sql="";
 		int insertCount=0;
-		String prod_num="1004";//테스틀위한 고정 값
+		int idx=0;
+		String prod_id="1004";//테스틀위한 고정 값
 		//추후에 추가할예정
-		/*String prod_num=0; (order테이블에서 가져올 )
+		/*String prod_id=0; (order테이블에서 가져올 )
 		 * 
 		 * 
 		 * 
 		 * */
-		sql="insert into review(prod_num,mem_id,rev_content,rev_score,rev_date,rev_fileName,rev_origfileName)";
-		sql+="values(?,?,?,?,sysdate(),?,?)";
+		sql="insert into review(prod_id,mem_id,rev_content,rev_score,rev_date,rev_fileName,rev_origfileName)";
+		sql+=" values(?,?,?,?,now(),?,?)";
 		
 		
 		try {
 	
 			
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1,prod_num);
+			pstmt.setInt(1,reviewBean.getProd_id());
 			pstmt.setString(2, reviewBean.getMem_id());
 			pstmt.setString(3, reviewBean.getRev_content());
 			pstmt.setString(4, reviewBean.getRev_score());
@@ -159,7 +160,7 @@ public class ReviewDAO {
 				System.out.println("selectReview 성공");
 				reviewBean = new ReviewBean();
 				reviewBean.setBoard_no(rs.getInt("board_no"));
-				reviewBean.setProd_num(rs.getString("prod_num"));
+				reviewBean.setProd_id(rs.getInt("prod_id"));
 				reviewBean.setMem_id(rs.getString("mem_id"));
 				reviewBean.setRev_content(rs.getString("rev_content"));
 				reviewBean.setRev_score(rs.getString("rev_score"));
@@ -185,14 +186,27 @@ public class ReviewDAO {
 	public int updateReview(ReviewBean reviewBean) {
 		int updateCount = 0;
 		PreparedStatement pstmt = null;
-		String sql="update review set rev_content=?,rev_score=?,rev_date=sysdate(),rev_fileName=? where board_no=?";
-
+		int idx=0;
+		String sql="update review set rev_content=?,rev_score=?,rev_date=now()";
+		
+		if(reviewBean.getRev_fileName()!=null) { 
+		
+			sql+= ", rev_fileName=? ";}
+		
+		sql+=" where board_no=?";
+		
 		try{
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, reviewBean.getRev_content());
-			pstmt.setString(2, reviewBean.getRev_score());
-			pstmt.setString(3, reviewBean.getRev_fileName());
-			pstmt.setInt(4, reviewBean.getBoard_no());
+			pstmt.setString(++idx, reviewBean.getRev_content());
+			pstmt.setString(++idx, reviewBean.getRev_score());
+			
+			if(reviewBean.getRev_fileName()!=null) {
+				pstmt.setString(++idx, reviewBean.getRev_fileName());
+			}	
+			
+			
+			pstmt.setInt(++idx, reviewBean.getBoard_no());
+			
 			updateCount = pstmt.executeUpdate();
 		}catch(Exception e){
 			System.out.println("updateReview 오류 : " + e);
@@ -248,6 +262,31 @@ public class ReviewDAO {
 
 		return deleteCount;
 
+	}
+
+	public int selectInsertboard() {
+		int board_no=0;
+		String sql="select * from review order by board_no desc limit 0,1"; //1행부터 시작하고싶으면 0,6   3행부터싲가하고싶으면 4,6
+			
+			
+	try {
+	
+	pstmt = con.prepareStatement(sql);
+	
+	rs = pstmt.executeQuery();
+	
+	if(rs.next()) {
+		board_no=rs.getInt("board_no");
+		}
+	 }catch(Exception e) {
+		  System.out.println("[ReviewDAO] selectList 에러 :" +e);
+	  }finally{
+			close(rs);
+			close(pstmt);
+		}
+	 
+	
+		return board_no;
 	}
 	
 	

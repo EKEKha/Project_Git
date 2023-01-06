@@ -12,6 +12,7 @@ public class MemberBean {
 	 private String mem_address2;
 	 private String mem_address3;
 	 private String mem_grade;
+	 private int mem_point;
 	
 	public String getMem_id() {
 		return mem_id;
@@ -73,4 +74,18 @@ public class MemberBean {
 	public void setMem_grade(String mem_grade) {
 		this.mem_grade = mem_grade;
 	}
+	public int getMem_point() {
+		return mem_point;
+	}
+	public void setMem_point(int mem_point) {
+		this.mem_point = mem_point;
+	}
+
+	
+	
+	
+	
+	
+	
+	
 }
